@@ -21,14 +21,11 @@
 #define NWNX_STUNFIST_H
 
 
-#include "NWNXLib.h"
+#include "NWNXApi.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-void HookStunFistDC(void);
-void Hook_StunFistUse(void);
 
 #ifdef __cplusplus
 }
@@ -39,14 +36,12 @@ class CNWNXStunFist: public CNWNXBase
 {
 public:
     CNWNXStunFist();
-    virtual ~ CNWNXStunFist();
-
+    virtual ~CNWNXStunFist() = default;
     bool OnCreate(gline *nwnxConfig, const char *LogDir = NULL);
     char *OnRequest(char *gameObject, char *Request, char *Parameters);
     unsigned long OnRequestObject(char *gameObject, char *Request);
-
-    // bool OnRelease  ();
 };
+
 #endif
 
 #endif /* NWNX_STUNFIST_H */
