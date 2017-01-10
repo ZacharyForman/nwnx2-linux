@@ -26,6 +26,8 @@
 #define NWNX_STUNFIST_SIG(NAME, SIG) { #NAME, &NAME, SIG }
 
 static unsigned char *Ref_StunFistMakeSave;
+static unsigned char *Ref_StunFistScriptStart;
+
 
 static struct StunFistSignatureTable {
     const char         *name;
@@ -35,6 +37,7 @@ static struct StunFistSignatureTable {
     { NULL, NULL,                               NULL },
 
     NWNX_STUNFIST_SIG(Ref_StunFistMakeSave,     "6a 01 6a 00 6a 01 8b 4d f0 ff 71 04 6a 00 0f b7 c7 50 6a 01 ff 75 e4"),
+    NWNX_STUNFIST_SIG(Ref_StunFistScriptStart,  "83 ec 08 6a 27 8b 55 f0 ff b2 68 0c 00 00"),
 
     { NULL, NULL,                               NULL },
 };
@@ -110,11 +113,23 @@ bool CNWNXStunFist::OnCreate(gline *config, const char *LogDir)
     /* find hook signatures */
     StunFistSearchSignatures();
 
-    /* critical confirmation roll hook */
+    /* stun DC hook */
     if (Ref_StunFistMakeSave != NULL) {
         extern volatile uintptr_t Hook_StunFistMakeSave_Return;
         nx_hook_function(Ref_StunFistMakeSave, (void *)HookStunFistDC, 5, NX_HOOK_DIRECT | NX_HOOK_RETCODE);
+        // Distance to DC call
         Hook_StunFistMakeSave_Return = (uintptr_t) Ref_StunFistMakeSave + 23;
+    }
+
+    /* stun start hook */
+    if (Ref_StunFistScriptStart != NULL) {
+        extern volatile uintptr_t Hook_StunFistSuccess_Return;
+        extern volatile uintptr_t Hook_StunFistFailure_Return;
+        nx_hook_function(Ref_StunFistScriptStart, (void *)Hook_StunFistUse, 5, NX_HOOK_DIRECT | NX_HOOK_RETCODE);
+        // Distance to decrement feat usage.
+        Hook_StunFistSuccess_Return = (uintptr_t) Ref_StunFistScriptStart + 0xe;
+        // Distance to tenative early exit.
+        Hook_StunFistFailure_Return = (uintptr_t) Ref_StunFistScriptStart -0x7c3;
     }
 
     return true;

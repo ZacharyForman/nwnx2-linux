@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 void HookStunFistDC(void);
+void Hook_StunFistUse(void);
 
 #ifdef __cplusplus
 }
