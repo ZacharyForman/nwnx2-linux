@@ -1,4 +1,3 @@
-
 /***************************************************************************
     NWNXStunFist.cpp - Implementation of the CNWNXStunFist class.
 
@@ -41,7 +40,7 @@ int Hook_GetStunFistDC(CNWSCreatureStats *stunner)
 void HookStunFistDC(void)
 {
     asm("leave");
-    /* The creature stunning is in %esp + 0x28 */
+    /* The creature stunning is in %esp + 0x28, then add the offset for the stats block.*/
     asm("mov 0x28(%esp),%edx");
     asm("pushl 0xc68(%edx)");
     asm("popl Hook_Stunner");
