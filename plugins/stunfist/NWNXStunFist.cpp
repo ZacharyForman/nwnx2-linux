@@ -96,7 +96,8 @@ unsigned char SavingThrowRollOverride(CNWSCreature *stunnee,
       if (stats->HasFeat(FEAT_EPIC_IMPROVED_STUNNING_FIST_1 + feats - 1)) break;
       feats--;
     }
-    return stunnee->SavingThrowRoll(type, 10+wis+hd/2+feats, savetype, stunner_id, print, feat, queuefeedback);
+    return stunnee->SavingThrowRoll(
+        type, 10 + wis + hd/2 + (feats * 1.5), savetype, stunner_id, print, feat, queuefeedback);
 }
 
 CNWNXStunFist::CNWNXStunFist()
